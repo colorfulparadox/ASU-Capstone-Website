@@ -1,37 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
 
+import { useState } from 'react';
+
 import Button from 'react-bootstrap/Button';
-import Badge from 'react-bootstrap/Badge';
+
+
+function OnClick() {
+  console.log("hello from button")
+  const buttonHolder = document.getElementById("ButtonHolder");
+  buttonHolder.remove();
+
+  const app = document.getElementById("App");
+  const node = document.createTextNode("this is a test here is your test number 1337!");
+  app.appendChild(node);
+}
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-
-      <h1>
-        Example heading
-        <Badge bg="secondary" as={Button}>
-          New
-        </Badge>
-        <Button variant="primary">Primary</Button>{' '}
-        <Button variant="secondary">Secondary</Button>{' '}
-        <Button variant="success">Success</Button>{' '}
-      </h1>
-
+    <div className="App" id="App"> 
+        <h1>Hello press the button to get a random number!</h1>
+        <div id="ButtonHolder">
+          <Button variant="primary" onClick={OnClick}>Press me!</Button>
+        </div>
     </div>
   );
 }
