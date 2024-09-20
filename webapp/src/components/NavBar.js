@@ -17,7 +17,7 @@ export default function NavBar() {
           </Nav>
           <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
           <Nav className="me-auto">
-            <Nav.Link class="" href="Logout">Logout</Nav.Link>
+            <Nav.Link className="" href="/">Logout</Nav.Link>
           </Nav>
         </Container>
       </Navbar>

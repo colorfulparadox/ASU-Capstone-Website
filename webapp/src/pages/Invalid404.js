@@ -1,10 +1,10 @@
 import NavBar from '../components/NavBar'; 
 
-export default function Profile() {
+export default function Invalid404() {
     return (
         <>
             <NavBar />
-            <h1>This is the profile view!</h1>
+            <h1>this is a 404 idiot</h1>
         </>
     )
 }
