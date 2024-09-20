@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 
+import NavBar from './components/NavBar'; 
+
 
 function OnClick() {
-  console.log("hello from button")
   const buttonHolder = document.getElementById("ButtonHolder");
   buttonHolder.remove();
 
@@ -19,6 +20,7 @@ function OnClick() {
 function App() {
   return (
     <div className="App" id="App"> 
+        <NavBar />
         <h1>Hello press the button to get a random number!</h1>
         <div id="ButtonHolder">
           <Button variant="primary" onClick={OnClick}>Press me!</Button>
