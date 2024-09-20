@@ -6,7 +6,7 @@ function OnClick() {
     const buttonHolder = document.getElementById("ButtonNumber");
     buttonHolder.remove();
   
-    const app = document.getElementById("numberID");
+    const app = document.getElementById("NumberID");
     const node = document.createTextNode("this is a test here is your test number 1337!");
     app.appendChild(node);
   }
