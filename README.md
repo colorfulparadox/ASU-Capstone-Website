@@ -9,5 +9,5 @@ https://react-bootstrap.netlify.app/
 https://reactrouter.com/en/main
 
 
-### Web Hosting Server
+### Web Hosting Server Dependencies
 Go
