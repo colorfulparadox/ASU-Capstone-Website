@@ -1,12 +1,14 @@
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from "react-router-dom";
 
+import Cookies from 'js-cookie'
 
 import logo from '../logo.svg'
   
 
-function RequestLogin(event) {
+function RequestLogin(event, navigate) {
     event.preventDefault();
 
     let username = document.getElementById("usernameForm");
@@ -25,25 +27,44 @@ function RequestLogin(event) {
         return
     }
 
+
     fetch("http://localhost:4040/login", {
-        body: JSON.stringify({ u, p }),
         method: "POST",
-        
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user: u, pass: p }),
     }).then((response) => {
-        console.log(response.json());
+        if (!response.ok) {
+            throw new Error ("network not ok bro")
+        }
+        return response.json();
+    }).then((data) => {
+        console.log(data)
+        Cookies.set("LoginToken", data.authID, {
+            expires: new Date(data.expires * 1000), 
+            secure: true, 
+            sameSite: 'Strict'
+        });
+        navigate('/game');
     }).catch((error) => {
         console.log(error);
     });
-
 }
 
 
 export default function Login() {
+    const navigate = useNavigate();
+
+    const onSubmit = (event) => {
+        RequestLogin(event, navigate)
+    }
+
     return (
         <div className="LoginMain">
             <img src={logo} className="App-logo" alt="logo"/>
             <h3>Login</h3>
-            <Form onSubmit={RequestLogin}>
+            <Form onSubmit={onSubmit}>
                 <Form.Group className="mb-5">
                     <Form.Label>Username:</Form.Label>
                     <Form.Control type="username" placeholder="username" id="usernameForm"/>

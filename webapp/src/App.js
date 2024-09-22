@@ -5,15 +5,21 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import Cookies from 'js-cookie'
 
 function ProtectedRoute() {
-  let auth = false;
-
   //check if cookie exists
-  let loggedIn = Cookies.get('loggedIn');
+  let loggedIn = Cookies.get('LoginToken');
 
   console.log(loggedIn);
 
   return (
-    auth === true ? <Outlet/> : <Navigate to="/"/>
+    loggedIn ? <Outlet/> : <Navigate to="/"/>
+  )
+}
+
+function NotLoggedIn() {
+  let loggedIn = Cookies.get('LoginToken');
+
+  return (
+    !loggedIn ? <Outlet/> : <Navigate to="/game"/>
   )
 }
 
@@ -21,7 +27,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login/>} /> 
+        <Route element={<NotLoggedIn/>}>
+          <Route path="/" element={<Login/>} /> 
+        </Route>
         <Route path="*" element={<Invalid404 />}/>
         <Route element={<ProtectedRoute/>}>
           <Route path="/Game" element={<Game/>} /> 
