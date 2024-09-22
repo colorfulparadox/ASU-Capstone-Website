@@ -9,5 +9,7 @@ https://react-bootstrap.netlify.app/
 https://reactrouter.com/en/main
 
 
+https://github.com/js-cookie/js-cookie
+
 ### Web Hosting Server Dependencies
 Go
