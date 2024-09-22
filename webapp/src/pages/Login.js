@@ -16,7 +16,7 @@ export default function Login() {
             <img src={logo} className="App-logo" alt="logo"/>
             <h3>Login</h3>
             <Form>
-                <Form.Group className="mb-4" controlId="formPlaintextPassword">
+                <Form.Group className="mb-5" controlId="formPlaintextPassword">
                     <Form.Label>Username:</Form.Label>
                     <Form.Control type="username" placeholder="" id="username"/>
                     <Form.Label>Password:</Form.Label>
