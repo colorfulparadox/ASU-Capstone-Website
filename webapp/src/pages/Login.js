@@ -1,29 +1,29 @@
-import NavBar from '../components/NavBar'; 
+
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
-
-function OnClick() {
-    const buttonHolder = document.getElementById("ButtonNumber");
-    buttonHolder.remove();
-  
-    const app = document.getElementById("NumberID");
-    const node = document.createTextNode("this is a test here is your test number 1337!");
-    app.appendChild(node);
-  }
+import logo from '../logo.svg'
   
 
-  
+function requestLogin(){
+
+}
+
 
 export default function Login() {
     return (
-        <>
-            <NavBar />
-            <h5>login screen with a demo!</h5>
-            <br/>
-            <h1>Hello press the button to get a random number!</h1>
-            <div id="NumberID">
-                <Button id="ButtonNumber" variant="primary" onClick={OnClick}>Press me!</Button>
-            </div>
-        </>
+        <div className="LoginMain">
+            <img src={logo} className="App-logo" alt="logo"/>
+            <h3>Login</h3>
+            <Form>
+                <Form.Group className="mb-4" controlId="formPlaintextPassword">
+                    <Form.Label>Username:</Form.Label>
+                    <Form.Control type="username" placeholder="" id="username"/>
+                    <Form.Label>Password:</Form.Label>
+                    <Form.Control type="password" placeholder="" id="password"/>
+                    <Button className="LoginButton" variant="primary" id="loginButton">Login</Button>{' '}
+                </Form.Group>
+            </Form>
+        </div>
     )
 }
