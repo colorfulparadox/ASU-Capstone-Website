@@ -1,10 +1,25 @@
+import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
 
-//import NavbarBrand from 'react-bootstrap/NavbarBrand'
+function Logout(event, navigate){
+  event.preventDefault();
+  Cookies.remove('LoginToken', { path: '/', domain: 'localhost' })
+  navigate('/');
+  console.log("hello world")
+}
 
 export default function NavBar() {
+
+    const navigate = useNavigate();
+
+    const onSubmit = (event) => {
+        Logout(event, navigate)
+    }
+
     return (
         <Navbar bg="dark" data-bs-theme="dark">
         <Container>
@@ -16,9 +31,7 @@ export default function NavBar() {
             <Nav.Link href="Leaderboard">Leaderboard</Nav.Link>
           </Nav>
           <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
-          <Nav className="me-auto">
-            <Nav.Link className="" href="/">Logout</Nav.Link>
-          </Nav>
+          <Button className="" variant="outline-danger" type="submit" onClick={onSubmit}>Logout</Button>
         </Container>
       </Navbar>
     )
