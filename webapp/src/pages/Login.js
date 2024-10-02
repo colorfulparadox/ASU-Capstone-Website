@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import Cookies from 'js-cookie'
 
-import logo from '../logo.svg'
+// not tranparent 😭
+import logo from '../assets/logo.png' 
   
 
 function RequestLogin(event, navigate) {
