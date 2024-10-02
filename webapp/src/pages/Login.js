@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import Cookies from 'js-cookie'
 
-// not tranparent 😭
+// not transparent 😭
 import logo from '../assets/logo.png' 
   
 

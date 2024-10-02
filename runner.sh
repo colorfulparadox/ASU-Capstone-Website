@@ -23,6 +23,16 @@ if [ "$1" = "build" ] && [ "$2" = "all" ]; then
     build_webapp
 fi
 
+if [ "$1" = "buildrun" ]; then
+    cd hosting_server
+    build_server
+    cd ../webapp
+    build_webapp
+
+    cd ../hosting_server
+    ./HostingServer
+fi
+
 
 if [ "$1" = "build" ] && [ "$2" = "server" ]; then
     cd hosting_server
