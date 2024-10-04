@@ -29,15 +29,15 @@ function RequestLogin(event, navigate) {
     }
 
 
-    fetch("http://localhost:4040/login", {
+    fetch("https://backend-969215233601.us-central1.run.app/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ user: u, pass: p }),
+        body: JSON.stringify({ username: u, password: p }),
     }).then((response) => {
         if (!response.ok) {
-            throw new Error ("network not ok bro")
+            throw new Error ("network is not ok bro")
         }
         return response.json();
     }).then((data) => {
