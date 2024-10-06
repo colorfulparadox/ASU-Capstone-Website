@@ -5,7 +5,7 @@ function build_server() {
     if test -f HostingServer; then
         go clean
     fi
-    go build .
+    go build -v .
 }
 
 function build_webapp() {
@@ -14,14 +14,6 @@ function build_webapp() {
     fi
     npm run build
 }
-
-
-if [ "$1" = "build" ] && [ "$2" = "all" ]; then
-    cd hosting_server
-    build_server
-    cd ../webapp
-    build_webapp
-fi
 
 if [ "$1" = "buildrun" ]; then
     cd hosting_server
@@ -34,15 +26,27 @@ if [ "$1" = "buildrun" ]; then
 fi
 
 
-if [ "$1" = "build" ] && [ "$2" = "server" ]; then
-    cd hosting_server
-    build_server
-fi
+if [ "$1" = "build" ]; then
+    if [ -z "$2" ]; then
+        echo "Error: You didn't specify 'server' or 'web', or 'all'."
+        exit 1
+    fi
 
-
-if [ "$1" = "build" ] && [ "$2" = "web" ]; then
-    cd webapp
-    build_webapp
+    if [ "$2" = "server" ]; then
+        cd hosting_server
+        build_server
+    elif [ "$2" = "web" ]; then
+        cd webapp
+        build_webapp
+    elif [ "$2" = "all" ]; then
+        cd hosting_server
+        build_server
+        cd ../webapp
+        build_webapp
+    else
+        echo "Invalid option: '$2'. Please specify 'server' or 'web' or 'all'."
+        exit 1
+    fi
 fi
 
 
