@@ -5,7 +5,7 @@ function build_server() {
     if test -f HostingServer; then
         go clean
     fi
-    go build .
+    go build -v .
 }
 
 function build_webapp() {
@@ -44,7 +44,7 @@ if [ "$1" = "build" ]; then
         cd ../webapp
         build_webapp
     else
-        echo "Invalid option: '$2'. Please specify 'server' or 'web'."
+        echo "Invalid option: '$2'. Please specify 'server' or 'web' or 'all'."
         exit 1
     fi
 fi
