@@ -33,6 +33,36 @@ function GetAdminData() {
         });
 }
 
+function LogOutUser(Username) {
+    let authiddata = Cookies.get("LoginToken");
+
+    return fetch("https://backend-969215233601.us-central1.run.app/reset_auth_id", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            authID: authiddata,
+            username: Username
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    "my disappointment is immeasurable and my day is ruined"
+                );
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            return data;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 function CreateUser(Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
@@ -186,19 +216,20 @@ export default function Admin() {
     }
 
     function initalize() {
-        setUser();
-        setName();
-        setUsername();
-        setPassword();
-        setEmail();
-        setPermission_Level();
+        setName("");
+        setUsername("");
+        setPassword("");
+        setEmail("");
+        setPermission_Level(0);
     }
 
     function toggleEditUser() {
-        initalize();
-        setEditUser((editUserVisible) => !editUserVisible);
-        if (editUserVisible) {
-            setCreateUser(false);
+        if (user !== "") {
+            initalize();
+            setEditUser((editUserVisible) => !editUserVisible);
+            if (editUserVisible) {
+                setCreateUser(false);
+            }
         }
     }
 
@@ -485,6 +516,7 @@ export default function Admin() {
                                             <th>Email</th>
                                             <th>Permission Level</th>
                                             <th>Points</th>
+                                            <th>Log Out</th>
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
@@ -497,6 +529,11 @@ export default function Admin() {
                                                     <td>{obj.email}</td>
                                                     <td>{obj.permission_level.toString()}</td>
                                                     <td>{obj.points.toString()}</td>
+                                                    <td>
+                                                        <Button onClick={() => LogOutUser(obj.username)}>
+                                                            Log Out
+                                                        </Button>
+                                                    </td>
                                                     <td>
                                                         <Button onClick={() => deleteUser(obj.username)}>
                                                             Delete

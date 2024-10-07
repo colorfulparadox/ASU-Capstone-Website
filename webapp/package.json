@@ -14,7 +14,8 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "react-unity-webgl": "^9.5.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webapp": "file:"
   },
   "scripts": {
     "start": "react-scripts start",
