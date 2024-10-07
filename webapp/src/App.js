@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Game, Invalid404, Leaderboard, Login, Profile } from './pages'
+import { Game, Invalid404, Leaderboard, Login, Profile, Admin } from './pages'
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Cookies from 'js-cookie'
 
@@ -35,6 +35,7 @@ function App() {
           <Route path="/Game" element={<Game/>} /> 
           <Route path="/Leaderboard" element={<Leaderboard/>} /> 
           <Route path="/Profile" element={<Profile />} /> 
+          <Route path="/Admin" element={<Admin />} /> 
         </Route>
       </Routes>
     </Router>
