@@ -1,6 +1,6 @@
 import NavBar from '../components/NavBar'; 
 import { Container, Row, Col, Image, Form, ListGroup, Button } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Cookies from 'js-cookie'
 
 export default function Profile() {
@@ -9,6 +9,7 @@ export default function Profile() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(true); 
+    const passwordRef = useRef("");
   
     // Fetch user data on component mount
     useEffect(() => {
@@ -93,18 +94,36 @@ export default function Profile() {
     
     
     const passwordUpdateSubmit = (event) => {
-    
         event.preventDefault();
+
+        var pw = passwordRef.current.value;
     
-        // note: moving to react state stuff soon™
-        let password = document.getElementById("inputPassword1").value;
-    
-        if (password === "") {
-            console.log("Don't submit with empty fields");
+        if (pw === "") {
+            console.log("Don't submit an empty password");
             return;
         }
     
-        // TODO
+        let authiddata = Cookies.get('LoginToken');
+    
+        // I imagine we could generalize this into an update function that passes the JSON
+        return fetch("https://backend.project-persona.com/update_user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ authID: authiddata, password: pw}),
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error ("network error")
+            }
+            return response.json();
+        }
+        ).then((data) => {
+            console.log(data)
+            return data;
+        }).catch((error) => {
+            console.log(error);
+        });
     
     }
 
@@ -176,9 +195,11 @@ export default function Profile() {
                         >Update</Button>
                         <br/>
                         <Form.Group>
-                            <Form.Label htmlFor="inputPassword1">Password</Form.Label>
+                            <Form.Label htmlFor="inputPassword1">Set new password</Form.Label>
                             <Form.Control 
                                 className="mb-3"
+                                ref={passwordRef}
+                                name="password"
                                 type="password"
                                 id="inputPassword1"/>
                         </Form.Group>
