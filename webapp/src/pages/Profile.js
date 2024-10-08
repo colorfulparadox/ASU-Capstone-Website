@@ -8,7 +8,6 @@ export default function Profile() {
     const [username, setUsername] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(true); 
     const passwordRef = useRef("");
   
     // Fetch user data on component mount
