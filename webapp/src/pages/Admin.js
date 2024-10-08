@@ -2,6 +2,13 @@ import NavBar from "../components/NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from '@mui/material';
 
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
@@ -209,18 +216,27 @@ export default function Admin() {
         GetAdminUserList().then((data) => {
             setUserList(data);
         });
-    }, []);
+    }, [tableVisible, createUserVisible, editUserVisible]);
 
     function toggleTable() {
         setTable((tableVisible) => !tableVisible);
     }
 
     function initalize() {
+        setUser("")
         setName("");
         setUsername("");
         setPassword("");
         setEmail("");
         setPermission_Level(0);
+    }
+
+    function toggleCreateUser() {
+        initalize();
+        setCreateUser((editUserVisible) => !editUserVisible);
+        if (editUserVisible) {
+            setEditUser(false);
+        }
     }
 
     function toggleEditUser() {
@@ -230,14 +246,6 @@ export default function Admin() {
             if (editUserVisible) {
                 setCreateUser(false);
             }
-        }
-    }
-
-    function toggleCreateUser() {
-        initalize();
-        setCreateUser((editUserVisible) => !editUserVisible);
-        if (editUserVisible) {
-            setEditUser(false);
         }
     }
 
@@ -288,6 +296,17 @@ export default function Admin() {
         GetAdminUserList().then((data) => {
             setUserList(data); // Set the user data when the promise resolves
         });
+    }
+
+    function getPermission(permission_value) {
+        switch (permission_value) {
+            case 0: 
+                return "User"
+            case 1:
+                return "Admin"
+            default:
+                return "Unknown"
+        }
     }
 
     console.log("admindata ", adminData);
@@ -460,7 +479,6 @@ export default function Admin() {
                                             <Form.Select
                                                 type="permission_level"
                                                 name="permission_level"
-                                                placeholder="permission level"
                                                 onChange={handleChange}
                                             >
                                                 <option value="0">User</option>
@@ -508,42 +526,42 @@ export default function Admin() {
                         {tableVisible && (
                             <Col>
                                 <h3>Users</h3>
-                                <table style={{ width: "100%" }}>
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Permission Level</th>
-                                            <th>Points</th>
-                                            <th>Log Out</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell >Name</TableCell >
+                                            <TableCell >Username</TableCell >
+                                            <TableCell >Email</TableCell >
+                                            <TableCell >Permission Level</TableCell >
+                                            <TableCell >Points</TableCell >
+                                            <TableCell >Log Out</TableCell >
+                                            <TableCell >Delete</TableCell >
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
                                         {userList.map((obj) => {
                                             return (
-                                                <tr>
-                                                    <td>{obj.name}</td>
-                                                    <td>{obj.username}</td>
-                                                    <td>{obj.email}</td>
-                                                    <td>{obj.permission_level.toString()}</td>
-                                                    <td>{obj.points.toString()}</td>
-                                                    <td>
+                                                <TableRow>
+                                                    <TableCell>{obj.name}</TableCell>
+                                                    <TableCell>{obj.username}</TableCell>
+                                                    <TableCell>{obj.email}</TableCell>
+                                                    <TableCell>{getPermission(obj.permission_level)}</TableCell>
+                                                    <TableCell>{obj.points.toString()}</TableCell>
+                                                    <TableCell>
                                                         <Button onClick={() => LogOutUser(obj.username)}>
                                                             Log Out
                                                         </Button>
-                                                    </td>
-                                                    <td>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <Button onClick={() => deleteUser(obj.username)}>
                                                             Delete
                                                         </Button>
-                                                    </td>
-                                                </tr>
+                                                    </TableCell>
+                                                </TableRow>
                                             );
                                         })}
-                                    </tbody>
-                                </table>
+                                    </TableBody>
+                                </Table>
                             </Col>
                         )}
 
