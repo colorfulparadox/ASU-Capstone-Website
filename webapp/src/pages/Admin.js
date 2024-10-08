@@ -13,9 +13,7 @@ import {
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(
-        "https://backend-969215233601.us-central1.run.app/authenticate",
-        {
+    return fetch("https://backend.project-persona.com/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,6 +31,9 @@ function GetAdminData() {
         })
         .then((data) => {
             console.log(data);
+            if (data.permission_level === 0) {
+                window.location.replace('/game')
+            }
             return data;
         })
         .catch((error) => {
@@ -43,7 +44,7 @@ function GetAdminData() {
 function LogOutUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/reset_auth_id", {
+    return fetch("https://backend.project-persona.com/reset_auth_id", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -73,7 +74,7 @@ function LogOutUser(Username) {
 function CreateUser(Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/create_user", {
+    return fetch("https://backend.project-persona.com/create_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -107,7 +108,7 @@ function CreateUser(Name, Username, Password, Email, Permission_Level) {
 function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/update_user", {
+    return fetch("https://backend.project-persona.com/update_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -142,7 +143,7 @@ function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
 function DeleteUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/delete_user", {
+    return fetch("https://backend.project-persona.com/delete_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -169,7 +170,7 @@ function DeleteUser(Username) {
 function GetAdminUserList() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/user_list", {
+    return fetch("https://backend.project-persona.com/user_list", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
