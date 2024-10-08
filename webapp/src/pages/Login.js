@@ -29,7 +29,7 @@ function RequestLogin(event, navigate) {
     }
 
 
-    fetch("https://backend-969215233601.us-central1.run.app/login", {
+    fetch("https://backend.project-persona.com/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
