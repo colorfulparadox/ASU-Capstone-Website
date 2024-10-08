@@ -25,6 +25,8 @@ function GetPermission() {
       body: JSON.stringify({ authID: authiddata }),
   }).then((response) => {
       if (!response.ok) {
+          Cookies.remove('LoginToken', { path: '/', domain: 'localhost' })
+          window.location.replace('/')
           throw new Error("my disappointment is immeasurable and my day is ruined")
       }
       return response.json();

@@ -2,13 +2,18 @@ import NavBar from "../components/NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from '@mui/material';
 
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(
-        "https://backend-969215233601.us-central1.run.app/authenticate",
-        {
+    return fetch("https://backend.project-persona.com/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -16,6 +21,39 @@ function GetAdminData() {
             body: JSON.stringify({ authID: authiddata }),
         }
     )
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    "my disappointment is immeasurable and my day is ruined"
+                );
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            if (data.permission_level === 0) {
+                window.location.replace('/game')
+            }
+            return data;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+function LogOutUser(Username) {
+    let authiddata = Cookies.get("LoginToken");
+
+    return fetch("https://backend.project-persona.com/reset_auth_id", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            authID: authiddata,
+            username: Username
+        }),
+    })
         .then((response) => {
             if (!response.ok) {
                 throw new Error(
@@ -36,7 +74,7 @@ function GetAdminData() {
 function CreateUser(Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/create_user", {
+    return fetch("https://backend.project-persona.com/create_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -70,7 +108,7 @@ function CreateUser(Name, Username, Password, Email, Permission_Level) {
 function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/update_user", {
+    return fetch("https://backend.project-persona.com/update_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -105,7 +143,7 @@ function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
 function DeleteUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/delete_user", {
+    return fetch("https://backend.project-persona.com/delete_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -132,7 +170,7 @@ function DeleteUser(Username) {
 function GetAdminUserList() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend-969215233601.us-central1.run.app/user_list", {
+    return fetch("https://backend.project-persona.com/user_list", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -179,27 +217,19 @@ export default function Admin() {
         GetAdminUserList().then((data) => {
             setUserList(data);
         });
-    }, []);
+    }, [tableVisible, createUserVisible, editUserVisible]);
 
     function toggleTable() {
         setTable((tableVisible) => !tableVisible);
     }
 
     function initalize() {
-        setUser();
-        setName();
-        setUsername();
-        setPassword();
-        setEmail();
-        setPermission_Level();
-    }
-
-    function toggleEditUser() {
-        initalize();
-        setEditUser((editUserVisible) => !editUserVisible);
-        if (editUserVisible) {
-            setCreateUser(false);
-        }
+        setUser("")
+        setName("");
+        setUsername("");
+        setPassword("");
+        setEmail("");
+        setPermission_Level(0);
     }
 
     function toggleCreateUser() {
@@ -207,6 +237,16 @@ export default function Admin() {
         setCreateUser((editUserVisible) => !editUserVisible);
         if (editUserVisible) {
             setEditUser(false);
+        }
+    }
+
+    function toggleEditUser() {
+        if (user !== "") {
+            initalize();
+            setEditUser((editUserVisible) => !editUserVisible);
+            if (editUserVisible) {
+                setCreateUser(false);
+            }
         }
     }
 
@@ -257,6 +297,17 @@ export default function Admin() {
         GetAdminUserList().then((data) => {
             setUserList(data); // Set the user data when the promise resolves
         });
+    }
+
+    function getPermission(permission_value) {
+        switch (permission_value) {
+            case 0: 
+                return "User"
+            case 1:
+                return "Admin"
+            default:
+                return "Unknown"
+        }
     }
 
     console.log("admindata ", adminData);
@@ -429,7 +480,6 @@ export default function Admin() {
                                             <Form.Select
                                                 type="permission_level"
                                                 name="permission_level"
-                                                placeholder="permission level"
                                                 onChange={handleChange}
                                             >
                                                 <option value="0">User</option>
@@ -477,36 +527,42 @@ export default function Admin() {
                         {tableVisible && (
                             <Col>
                                 <h3>Users</h3>
-                                <table style={{ width: "100%" }}>
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Permission Level</th>
-                                            <th>Points</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell >Name</TableCell >
+                                            <TableCell >Username</TableCell >
+                                            <TableCell >Email</TableCell >
+                                            <TableCell >Permission Level</TableCell >
+                                            <TableCell >Points</TableCell >
+                                            <TableCell >Log Out</TableCell >
+                                            <TableCell >Delete</TableCell >
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
                                         {userList.map((obj) => {
                                             return (
-                                                <tr>
-                                                    <td>{obj.name}</td>
-                                                    <td>{obj.username}</td>
-                                                    <td>{obj.email}</td>
-                                                    <td>{obj.permission_level.toString()}</td>
-                                                    <td>{obj.points.toString()}</td>
-                                                    <td>
+                                                <TableRow>
+                                                    <TableCell>{obj.name}</TableCell>
+                                                    <TableCell>{obj.username}</TableCell>
+                                                    <TableCell>{obj.email}</TableCell>
+                                                    <TableCell>{getPermission(obj.permission_level)}</TableCell>
+                                                    <TableCell>{obj.points.toString()}</TableCell>
+                                                    <TableCell>
+                                                        <Button onClick={() => LogOutUser(obj.username)}>
+                                                            Log Out
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <Button onClick={() => deleteUser(obj.username)}>
                                                             Delete
                                                         </Button>
-                                                    </td>
-                                                </tr>
+                                                    </TableCell>
+                                                </TableRow>
                                             );
                                         })}
-                                    </tbody>
-                                </table>
+                                    </TableBody>
+                                </Table>
                             </Col>
                         )}
 
