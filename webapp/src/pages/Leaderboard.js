@@ -1,10 +1,11 @@
 import NavBar from '../components/NavBar'; 
 import React, { useState } from 'react';
 import { Form, Table, Button, Container, Row, Col, Modal } from 'react-bootstrap';
+import Cookies from 'js-cookie'
 
-const playersData = [
+var playersData = [
         // TEMPORARY Need to integrate database functionality 
-        { id: 1, name: 'Employee 1', score: 50 },
+       /* { id: 1, name: 'Employee 1', score: 50 },
         { id: 2, name: 'Employee 2', score: 78 },
         { id: 3, name: 'Employee 3', score: 84 },
         { id: 4, name: 'Employee 4', score: 80 },
@@ -13,9 +14,37 @@ const playersData = [
         { id: 7, name: 'Employee 7', score: 81 },
         { id: 8, name: 'Employee 8', score: 96 },
         { id: 9, name: 'Employee 9', score: 12 },
-        { id: 10, name: 'Employee 10', score: 8 }
+        { id: 10, name: 'Employee 10', score: 8 }     
+         */   
+];
 
-    ];
+function grabUserList() {
+  let authiddata = Cookies.get('LoginToken');
+
+  return fetch("https://backend.project-persona.com/user_list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ authID: authiddata, admin: false }),
+  }).then((response) => {
+    if (!response.ok) {
+      //console.log(response)
+      throw new Error ("my disappointment is immeasurable and my day is ruined hiii squidward *freakbob*")
+    }
+    return response.json();
+  }).then((data) => {
+      for (var i = 0; i < data.length; i++) {
+        playersData.push({id: i, name: data[i].name, points: data[i].points})
+      }
+      return data;
+  }).catch((error) => {
+      console.log(error);
+  });
+}
+    
+grabUserList()
+console.log(playersData)
 
 export default function Leaderboard() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,9 +69,24 @@ export default function Leaderboard() {
 
   const filteredPlayers = players
       .filter(player => player.name.toLowerCase().includes(searchQuery))
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => b.points - a.points);
 
-  return (
+      /*
+          type SpecifyUser struct {
+            AuthID    string `json:"authID"`
+            AdminList bool   `json:"admin"`
+          }
+
+          type UserElement struct {
+            Name        string `json:"name"`
+            Username    string `json:"username"`
+            Email       string `json:"email"`
+            Permissions int    `json:"permission_level"`
+            Points      int    `json:"points"`
+          }
+      */
+
+return (
   <>
       <NavBar />
       <Container style={{ padding: '20px' }}>
@@ -65,7 +109,7 @@ export default function Leaderboard() {
               <tr>
                 <th>Rank</th>
                 <th>Name</th>
-                <th>Score</th>
+                <th>Points</th>
               </tr>
             </thead>
             <tbody>
@@ -74,7 +118,7 @@ export default function Leaderboard() {
                   <tr key={player.id} onClick={() => handleRowClick(player)}>
                     <td>{index + 1}</td>
                     <td>{player.name}</td>
-                    <td>{player.score}</td>
+                    <td>{player.points}</td>
                   </tr>
                 ))
               ) : (
@@ -98,7 +142,7 @@ export default function Leaderboard() {
         {selectedPlayer ? (
           <>
             <h4>{selectedPlayer.name}</h4>
-            <p>Score: {selectedPlayer.score}</p>
+            <p>Points: {selectedPlayer.points}</p>
           </>
         ) : (
           <p>No player selected</p>
