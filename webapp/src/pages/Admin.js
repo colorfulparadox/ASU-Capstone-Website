@@ -10,37 +10,6 @@ import {
     TableRow,
 } from '@mui/material';
 
-function GetAdminData() {
-    let authiddata = Cookies.get("LoginToken");
-
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ authID: authiddata }),
-        }
-    )
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                    "my disappointment is immeasurable and my day is ruined"
-                );
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data);
-            if (data.permission_level === 0) {
-                window.location.replace('/game')
-            }
-            return data;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
 function LogOutUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
@@ -195,7 +164,6 @@ function GetAdminUserList() {
 }
 
 export default function Admin() {
-    const [adminData, setAdminData] = useState(null);
     const [userList, setUserList] = useState(null);
     const [tableVisible, setTable] = useState(false);
     const [createUserVisible, setCreateUser] = useState(false);
@@ -206,12 +174,6 @@ export default function Admin() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [permission_level, setPermission_Level] = useState(0);
-
-    useEffect(() => {
-        GetAdminData().then((data) => {
-            setAdminData(data);
-        });
-    }, []);
 
     useEffect(() => {
         GetAdminUserList().then((data) => {
@@ -309,9 +271,6 @@ export default function Admin() {
                 return "Unknown"
         }
     }
-
-    console.log("admindata ", adminData);
-    console.log("userlist ", userList);
 
     return (
         <>
