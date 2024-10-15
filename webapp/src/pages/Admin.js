@@ -13,7 +13,7 @@ import {
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/authenticate", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -44,7 +44,7 @@ function GetAdminData() {
 function LogOutUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/reset_auth_id", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/reset_auth_id", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function LogOutUser(Username) {
 function CreateUser(Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/create_user", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/create_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -108,7 +108,7 @@ function CreateUser(Name, Username, Password, Email, Permission_Level) {
 function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/update_user", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/update_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -143,7 +143,7 @@ function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
 function DeleteUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/delete_user", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/delete_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -170,7 +170,7 @@ function DeleteUser(Username) {
 function GetAdminUserList() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch("https://backend.project-persona.com/user_list", {
+    return fetch(process.env.REACT_APP_BACKEND_URL + "/user_list", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
