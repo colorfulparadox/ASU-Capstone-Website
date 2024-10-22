@@ -47,7 +47,7 @@ export default function Profile() {
 
         let authiddata = Cookies.get('LoginToken');
     
-        return fetch("https://backend.project-persona.com/authenticate", {
+        return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function Profile() {
     function UpdateProfileData() {
         let authiddata = Cookies.get('LoginToken');
     
-        return fetch("https://backend.project-persona.com/update_user", {
+        return fetch(process.env.REACT_APP_BACKEND_URL + "/update_user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function Profile() {
         let authiddata = Cookies.get('LoginToken');
     
         // I imagine we could generalize this into an update function that passes the JSON
-        return fetch("https://backend.project-persona.com/update_user", {
+        return fetch(process.env.REACT_APP_BACKEND_URL + "/update_user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -151,8 +151,8 @@ export default function Profile() {
             <NavBar />
             <Container>
                 <Row>
-                    <Col>
-                        <h2>Profile</h2>
+                    <Col style={{ padding: '20px' }}>
+                        <h1>Profile</h1>
                         <Image src="https://placehold.co/150" roundedCircle className="mb-3"/>
                         {/* todo: click the profile image circle to upload a new photo */}
                         <h4>Score: <Form.Label htmlFor="inputScore">{userData?.points}</Form.Label></h4>
