@@ -126,6 +126,28 @@ export default function Profile() {
     
     }
 
+    const getIconCharacter = (name) => {
+        if (name === "" || name === undefined) {
+            return "?";
+        }
+        return name.charAt(0).toUpperCase();
+    }
+
+    const getIconColor = (name) => {
+        // generate a color based on user's name
+        if (name === "" || name === undefined) {
+            return "#0000ff";
+        }
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        let c = (hash & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+        return "#" + "00000".substring(0, 6 - c.length) + c
+    }
+
     const handleChange = (event) => {
         event.preventDefault();
     
@@ -153,8 +175,10 @@ export default function Profile() {
                 <Row>
                     <Col style={{ padding: '20px' }}>
                         <h1>Profile</h1>
-                        <Image src="https://placehold.co/150" roundedCircle className="mb-3"/>
-                        {/* todo: click the profile image circle to upload a new photo */}
+                        <div className="circle-icon" style={{ background: getIconColor(userData?.name) }}>
+                            {getIconCharacter(userData?.name)}
+                        </div>
+                        
                         <h4>Score: <Form.Label htmlFor="inputScore">{userData?.points}</Form.Label></h4>
                         <Form.Group>
                             <Form.Label htmlFor="inputUsername">Username</Form.Label>
