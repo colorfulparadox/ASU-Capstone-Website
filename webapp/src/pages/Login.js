@@ -47,7 +47,7 @@ function RequestLogin(event, navigate) {
             secure: true, 
             sameSite: 'Strict'
         });
-        navigate('/game');
+        navigate('/home');
     }).catch((error) => {
         console.log(error);
     });

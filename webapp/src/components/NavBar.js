@@ -59,7 +59,7 @@ export default function NavBar() {
     return (
         <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="Game">Persona</Navbar.Brand>
+          <Navbar.Brand href="Home">Persona</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Nav className="me-auto">
             <Nav.Link href="Game">Game</Nav.Link>
