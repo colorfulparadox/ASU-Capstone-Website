@@ -316,7 +316,7 @@ export default function Admin() {
     return (
         <>
             <NavBar />
-            <Container>
+            <Container style={{ padding: '20px' }}>
                 <Row className="d-flex gap-2">
                     <h2>Admin Controls</h2>
 
