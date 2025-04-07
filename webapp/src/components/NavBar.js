@@ -62,7 +62,7 @@ export default function NavBar() {
           <Navbar.Brand href="Home">Persona</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Nav className="me-auto">
-            <Nav.Link href="Game">Game</Nav.Link>
+            <Nav.Link href="Game">Game Guide</Nav.Link>
             <Nav.Link href="Profile">Profile</Nav.Link>
             <Nav.Link href="Leaderboard">Leaderboard</Nav.Link>
             {user?.permission_level > 0 && <Nav.Link href="Admin">Admin</Nav.Link>}
