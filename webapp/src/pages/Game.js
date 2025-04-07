@@ -17,10 +17,16 @@ export default function Game() {
         <>
             <NavBar />
             <div className="LoginMain">
-                <h1>Game Guide</h1>
-                <h3>How to Install</h3>
-                <h3>How to Login</h3>
-                <h3>Customer Interactions</h3>
+                <div>
+                    <h1>Game Guide</h1>
+                    <p>asdasdasdasdasd</p>
+                    <h3>How to Install</h3>
+                    <p>asdasdasdasdasd</p>
+                    <h3>How to Login</h3>
+                    <p>asdasdasdasdasd</p>
+                    <h3>Customer Interactions</h3>
+                    <p>asdasdasdasdasd</p>
+                </div>
             </div>
         </>
     )
