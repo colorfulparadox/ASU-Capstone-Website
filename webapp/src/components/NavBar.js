@@ -17,7 +17,7 @@ function GetPermission() {
 
   let authiddata = Cookies.get('LoginToken');
 
-  return fetch("https://backend-969215233601.us-central1.run.app/authenticate", {
+  return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
