@@ -230,12 +230,6 @@ export default function Profile() {
                             className="mb-3"
                             onClick={passwordUpdateSubmit}
                             >Update Password</Button>
-                        <h3>Completed training sessions</h3>
-                        <ListGroup>
-                            <ListGroup.Item action href="#session1">Session 1</ListGroup.Item>
-                            <ListGroup.Item action href="#session2">Session 2</ListGroup.Item>
-                            <ListGroup.Item action href="#session3">Session 3</ListGroup.Item>
-                        </ListGroup>
                     </Col>
                 </Row>
             </Container>
