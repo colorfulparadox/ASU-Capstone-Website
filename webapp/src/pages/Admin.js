@@ -2,25 +2,20 @@ import NavBar from "../components/NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-} from '@mui/material';
+import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
+
 
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ authID: authiddata }),
-        }
-    )
+    return fetch("https://backend.project-persona.com/authenticate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ authID: authiddata }),
+    })
         .then((response) => {
             if (!response.ok) {
                 throw new Error(
@@ -32,7 +27,7 @@ function GetAdminData() {
         .then((data) => {
             console.log(data);
             if (data.permission_level === 0) {
-                window.location.replace('/game')
+                window.location.replace("/game");
             }
             return data;
         })
@@ -44,14 +39,14 @@ function GetAdminData() {
 function LogOutUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/reset_auth_id", {
+    return fetch("https://backend.project-persona.com/reset_auth_id", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
             authID: authiddata,
-            username: Username
+            username: Username,
         }),
     })
         .then((response) => {
@@ -74,7 +69,7 @@ function LogOutUser(Username) {
 function CreateUser(Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/create_user", {
+    return fetch("https://backend.project-persona.com/create_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -108,7 +103,7 @@ function CreateUser(Name, Username, Password, Email, Permission_Level) {
 function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/update_user", {
+    return fetch("https://backend.project-persona.com/update_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -143,7 +138,7 @@ function SetUserData(User, Name, Username, Password, Email, Permission_Level) {
 function DeleteUser(Username) {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/delete_user", {
+    return fetch("https://backend.project-persona.com/delete_user", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -170,7 +165,7 @@ function DeleteUser(Username) {
 function GetAdminUserList() {
     let authiddata = Cookies.get("LoginToken");
 
-    return fetch(process.env.REACT_APP_BACKEND_URL + "/user_list", {
+    return fetch("https://backend.project-persona.com/user_list", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -207,6 +202,54 @@ export default function Admin() {
     const [email, setEmail] = useState("");
     const [permission_level, setPermission_Level] = useState(0);
 
+    const columns = [
+        { field: "name", headerName: "Name", width: 200 },
+        { field: "username", headerName: "Username", width: 200 },
+        { field: "email", headerName: "Email", width: 250 },
+        {
+            field: "points",
+            headerName: "Points",
+            type: "number",
+            width: 100,
+        },
+        {
+            field: "logout",
+            headerName: "Log Out",
+            sortable: false,
+            width: 160,
+            renderCell: (row) => (
+                <Button
+                    variant="primary"
+                    type="submit"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={() => LogOutUser(row.username)}
+                >
+                    Log Out
+                </Button>
+            ),
+        },
+        {
+            field: "delete",
+            headerName: "Delete",
+            sortable: false,
+            width: 160,
+            renderCell: (row) => (
+                <Button
+                    variant="primary"
+                    type="submit"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={() => deleteUser(row.username)}
+                >
+                    Delete
+                </Button>
+            ),
+        },
+    ];
+
+    const paginationModel = { page: 0, pageSize: 5 };
+
     useEffect(() => {
         GetAdminData().then((data) => {
             setAdminData(data);
@@ -224,7 +267,7 @@ export default function Admin() {
     }
 
     function initalize() {
-        setUser("")
+        setUser("");
         setName("");
         setUsername("");
         setPassword("");
@@ -301,12 +344,12 @@ export default function Admin() {
 
     function getPermission(permission_value) {
         switch (permission_value) {
-            case 0: 
-                return "User"
+            case 0:
+                return "User";
             case 1:
-                return "Admin"
+                return "Admin";
             default:
-                return "Unknown"
+                return "Unknown";
         }
     }
 
@@ -316,7 +359,7 @@ export default function Admin() {
     return (
         <>
             <NavBar />
-            <Container style={{ padding: '20px' }}>
+            <Container style={{ padding: "20px" }}>
                 <Row className="d-flex gap-2">
                     <h2>Admin Controls</h2>
 
@@ -527,42 +570,16 @@ export default function Admin() {
                         {tableVisible && (
                             <Col>
                                 <h3>Users</h3>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell >Name</TableCell >
-                                            <TableCell >Username</TableCell >
-                                            <TableCell >Email</TableCell >
-                                            <TableCell >Permission Level</TableCell >
-                                            <TableCell >Points</TableCell >
-                                            <TableCell >Log Out</TableCell >
-                                            <TableCell >Delete</TableCell >
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {userList.map((obj) => {
-                                            return (
-                                                <TableRow>
-                                                    <TableCell>{obj.name}</TableCell>
-                                                    <TableCell>{obj.username}</TableCell>
-                                                    <TableCell>{obj.email}</TableCell>
-                                                    <TableCell>{getPermission(obj.permission_level)}</TableCell>
-                                                    <TableCell>{obj.points.toString()}</TableCell>
-                                                    <TableCell>
-                                                        <Button onClick={() => LogOutUser(obj.username)}>
-                                                            Log Out
-                                                        </Button>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button onClick={() => deleteUser(obj.username)}>
-                                                            Delete
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
+                                <Paper sx={{ height: 400, width: "100%" }}>
+                                    <DataGrid
+                                        rows={userList}
+                                        columns={columns}
+                                        getRowId={(userList) => userList.username}
+                                        initialState={{ pagination: { paginationModel } }}
+                                        pageSizeOptions={[5, 10]}
+                                        sx={{ border: 0 }}
+                                    />
+                                </Paper>
                             </Col>
                         )}
 
