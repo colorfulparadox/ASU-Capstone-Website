@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import Input from '@mui/material/Input';
+import { OutlinedInput, Switch } from "@mui/material";
 
 function GetAdminData() {
     let authiddata = Cookies.get("LoginToken");
@@ -189,6 +194,10 @@ function GetAdminUserList() {
         });
 }
 
+function viewData(data) {
+    console.log(data)
+}
+
 export default function Admin() {
     const [adminData, setAdminData] = useState(null);
     const [userList, setUserList] = useState(null);
@@ -203,9 +212,9 @@ export default function Admin() {
     const [permission_level, setPermission_Level] = useState(0);
 
     const columns = [
-        { field: "name", headerName: "Name", width: 200 },
-        { field: "username", headerName: "Username", width: 200 },
-        { field: "email", headerName: "Email", width: 250 },
+        { field: "name", headerName: "Name", width: 180 },
+        { field: "username", headerName: "Username", width: 180 },
+        { field: "email", headerName: "Email", width: 200 },
         {
             field: "points",
             headerName: "Points",
@@ -213,11 +222,17 @@ export default function Admin() {
             width: 100,
         },
         {
+            field: "permission_level",
+            headerName: "Permissions",
+            type: "number",
+            width: 100,
+        },
+        {
             field: "logout",
             headerName: "Log Out",
             sortable: false,
-            width: 160,
-            renderCell: (row) => (
+            width: 150,
+            renderCell: ({ row }) => (
                 <Button
                     variant="primary"
                     type="submit"
@@ -233,8 +248,8 @@ export default function Admin() {
             field: "delete",
             headerName: "Delete",
             sortable: false,
-            width: 160,
-            renderCell: (row) => (
+            width: 150,
+            renderCell: ({ row }) => (
                 <Button
                     variant="primary"
                     type="submit"
@@ -312,7 +327,12 @@ export default function Admin() {
                 setEmail(e.target.value);
                 break;
             case "permission_level":
-                setPermission_Level(e.target.value);
+                if (e.target.checked) {
+                    setPermission_Level(1);
+                } else {
+                    setPermission_Level(0);
+                }
+                
                 break;
             default:
                 break;
@@ -380,54 +400,41 @@ export default function Admin() {
                                 {createUserVisible && (
                                     <Row className="d-flex gap-2">
                                         <h3>Create User</h3>
-                                        <Form.Group>
-                                            <Form.Label>Name</Form.Label>
-                                            <Form.Control
-                                                type="name"
-                                                name="name"
-                                                placeholder="name"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control
-                                                type="username"
-                                                name="username"
-                                                placeholder="username"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder="password"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Email</Form.Label>
-                                            <Form.Control
-                                                type="email"
-                                                name="email"
-                                                placeholder="email"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Permissions</Form.Label>
-                                            <Form.Select
-                                                type="permission_level"
-                                                name="permission_level"
-                                                placeholder="permission level"
-                                                onChange={handleChange}
-                                            >
-                                                <option value="0">User</option>
-                                                <option value="1">Admin</option>
-                                            </Form.Select>
-                                        </Form.Group>
+                                        <FormControl component="fieldset" variant="standard">
+                                            <FormGroup>
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="name" />
+                                                    }
+                                                    label="Name"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="username" />
+                                                    }
+                                                    label="Username"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="password" />
+                                                    }
+                                                    label="Password"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="email" />
+                                                    }
+                                                    label="Email"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch onChange={handleChange} name="permission_level" />
+                                                    }
+                                                    label="Admin"
+                                                />
+                                            </FormGroup>
+                                            <FormHelperText>Be careful</FormHelperText>
+                                        </FormControl>
 
                                         <Row>
                                             <Col className="d-flex gap-2">
@@ -482,53 +489,41 @@ export default function Admin() {
                                 {editUserVisible && (
                                     <Row className="d-flex gap-2">
                                         <h3>Edit user: {user}</h3>
-                                        <Form.Group>
-                                            <Form.Label>Name</Form.Label>
-                                            <Form.Control
-                                                type="name"
-                                                name="name"
-                                                placeholder="name"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control
-                                                type="username"
-                                                name="username"
-                                                placeholder="username"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder="password"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Email</Form.Label>
-                                            <Form.Control
-                                                type="email"
-                                                name="email"
-                                                placeholder="email"
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>Permissions</Form.Label>
-                                            <Form.Select
-                                                type="permission_level"
-                                                name="permission_level"
-                                                onChange={handleChange}
-                                            >
-                                                <option value="0">User</option>
-                                                <option value="1">Admin</option>
-                                            </Form.Select>
-                                        </Form.Group>
+                                        <FormControl component="fieldset" variant="standard">
+                                            <FormGroup>
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="name" />
+                                                    }
+                                                    label="Name"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="username" />
+                                                    }
+                                                    label="Username"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="password" />
+                                                    }
+                                                    label="Password"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <OutlinedInput onChange={handleChange} name="email" />
+                                                    }
+                                                    label="Email"
+                                                />
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch onChange={handleChange} name="permission_level" />
+                                                    }
+                                                    label="Admin"
+                                                />
+                                            </FormGroup>
+                                            <FormHelperText>Be careful</FormHelperText>
+                                        </FormControl>
 
                                         <Col className="d-flex gap-2">
                                             <Button
