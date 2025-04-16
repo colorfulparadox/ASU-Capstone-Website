@@ -4,6 +4,6 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 
 commands to push docker image to google cloud
 
-docker build -t website-v1.0 /webapp
+docker build -t website-v1.0 ./webapp
 docker tag website-v1.0 us-central1-docker.pkg.dev/project-persona-438218/website/website-v1.0
 docker push us-central1-docker.pkg.dev/project-persona-438218/website/website-v1.0

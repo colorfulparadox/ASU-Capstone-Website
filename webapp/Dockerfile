@@ -1,14 +1,22 @@
-FROM node:18-alpine
-EXPOSE 3000
-
-WORKDIR /react-docker-example/
-
-COPY public/ /react-docker-example/public
-COPY src/ /react-docker-example/src
-COPY package.json /react-docker-example/
-
-ENV BACKEND=https://backend.project-persona.com
-
+# Use the latest LTS version of Node.js
+FROM node:latest
+ 
+# Set the working directory inside the container
+WORKDIR /webapp
+ 
+# Copy package.json and package-lock.json
+COPY package*.json ./
+ 
+# Install dependencies
 RUN npm install
 
+RUN npx update-browserslist-db@latest
+ 
+# Copy the rest of your application files
+COPY . .
+ 
+# Expose the port your app runs on
+EXPOSE 3000
+ 
+# Define the command to run your app
 CMD ["npm", "start"]
