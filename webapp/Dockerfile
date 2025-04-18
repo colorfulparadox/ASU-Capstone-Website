@@ -1,22 +1,26 @@
-# Use the latest LTS version of Node.js
-FROM node:latest
- 
-# Set the working directory inside the container
-WORKDIR /webapp
- 
-# Copy package.json and package-lock.json
-COPY package*.json ./
- 
-# Install dependencies
-RUN npm install
+# Use the slim version of the node 14 image as our base
+FROM node:14-slim
 
-RUN npx update-browserslist-db@latest
- 
-# Copy the rest of your application files
+# Create a directory for our application in the container 
+RUN mkdir -p /usr/src/app
+
+# Set this new directory as our working directory for subsequent instructions
+WORKDIR /usr/src/app
+
+# Copy all files in the current directory into the container
 COPY . .
- 
-# Expose the port your app runs on
-EXPOSE 3000
- 
-# Define the command to run your app
-CMD ["npm", "start"]
+
+# Set the environment variable for the application's port
+# (Be sure to replace '4200' with your application's specific port number if different)
+ENV PORT 3000
+
+# Install 'serve', a static file serving package globally in the container
+RUN npm install -g serve
+
+# Install all the node modules required by the React app
+RUN npm install
+# Build the React app
+RUN npm run build
+
+# Serve the 'build' directory on port 4200 using 'serve'
+CMD ["serve", "-s", "-l", "3000", "./build"]
