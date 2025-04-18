@@ -47,7 +47,7 @@ export default function Profile() {
 
         let authiddata = Cookies.get('LoginToken');
     
-        return fetch(process.env.REACT_APP_BACKEND_URL + "/authenticate", {
+        return fetch("https://backend.project-persona.com" + "/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
