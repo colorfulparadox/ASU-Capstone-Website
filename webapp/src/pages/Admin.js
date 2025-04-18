@@ -2,13 +2,12 @@ import NavBar from "../components/NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { OutlinedInput, Switch } from "@mui/material";
 
 function GetAdminData() {
@@ -194,14 +193,9 @@ function GetAdminUserList() {
         });
 }
 
-function viewData(data) {
-    console.log(data)
-}
-
 export default function Admin() {
-    const [adminData, setAdminData] = useState(null);
-    const [userList, setUserList] = useState(null);
-    const [tableVisible, setTable] = useState(false);
+    const [adminData, setAdminData] = useState();
+    const [userList, setUserList] = useState();
     const [createUserVisible, setCreateUser] = useState(false);
     const [editUserVisible, setEditUser] = useState(false);
     const [user, setUser] = useState("");
@@ -226,6 +220,17 @@ export default function Admin() {
             headerName: "Permissions",
             type: "number",
             width: 100,
+            renderCell: ({ row }) => (
+                <Button
+                    variant="primary"
+                    type="submit"
+                    size="small"
+                    style={{ marginLeft: 16 }}
+                    onClick={() => deleteUser(row.username)}
+                >
+                    Delete
+                </Button>
+            ),
         },
         {
             field: "logout",
@@ -263,7 +268,7 @@ export default function Admin() {
         },
     ];
 
-    const paginationModel = { page: 0, pageSize: 5 };
+    const paginationModel = { page: 0, pageSize: 10 };
 
     useEffect(() => {
         GetAdminData().then((data) => {
@@ -273,13 +278,9 @@ export default function Admin() {
 
     useEffect(() => {
         GetAdminUserList().then((data) => {
-            setUserList(data);
+            setUserList([...data]);
         });
-    }, [tableVisible, createUserVisible, editUserVisible]);
-
-    function toggleTable() {
-        setTable((tableVisible) => !tableVisible);
-    }
+    }, [createUserVisible, editUserVisible]);
 
     function initalize() {
         setUser("");
@@ -332,7 +333,7 @@ export default function Admin() {
                 } else {
                     setPermission_Level(0);
                 }
-                
+
                 break;
             default:
                 break;
@@ -341,24 +342,33 @@ export default function Admin() {
 
     function updateUser() {
         toggleEditUser();
-        SetUserData(user, name, username, password, email, permission_level);
-        GetAdminUserList().then((data) => {
-            setUserList(data); // Set the user data when the promise resolves
+        SetUserData(user, name, username, password, email, permission_level).then(() => {
+            setUserList([...userList.filter((user) => user.username !== username), {
+                "email": email,
+                "name":name,
+                "permission_level":permission_level,
+                "points": userList.filter((user) => user.username === username).points,
+                "username":username
+            }]);
         });
     }
 
     function createUser() {
         toggleCreateUser();
-        CreateUser(name, username, password, email, permission_level);
-        GetAdminUserList().then((data) => {
-            setUserList(data); // Set the user data when the promise resolves
+        CreateUser(name, username, password, email, permission_level).then(() => {
+            setUserList([...userList.filter((user) => user.username !== username), {
+                "email": email,
+                "name":name,
+                "permission_level":permission_level,
+                "points": 0,
+                "username":username
+            }]);
         });
     }
 
     function deleteUser(username) {
-        DeleteUser(username);
-        GetAdminUserList().then((data) => {
-            setUserList(data); // Set the user data when the promise resolves
+        DeleteUser(username).then(() => {
+            setUserList([...userList.filter((user) => user.username !== username)]);
         });
     }
 
@@ -373,8 +383,8 @@ export default function Admin() {
         }
     }
 
-    console.log("admindata ", adminData);
-    console.log("userlist ", userList);
+    console.log(adminData);
+    console.log(userList);
 
     return (
         <>
@@ -404,31 +414,46 @@ export default function Admin() {
                                             <FormGroup>
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="name" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="name"
+                                                        />
                                                     }
                                                     label="Name"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="username" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="username"
+                                                        />
                                                     }
                                                     label="Username"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="password" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="password"
+                                                        />
                                                     }
                                                     label="Password"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="email" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="email"
+                                                        />
                                                     }
                                                     label="Email"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <Switch onChange={handleChange} name="permission_level" />
+                                                        <Switch
+                                                            onChange={handleChange}
+                                                            name="permission_level"
+                                                        />
                                                     }
                                                     label="Admin"
                                                 />
@@ -493,31 +518,46 @@ export default function Admin() {
                                             <FormGroup>
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="name" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="name"
+                                                        />
                                                     }
                                                     label="Name"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="username" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="username"
+                                                        />
                                                     }
                                                     label="Username"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="password" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="password"
+                                                        />
                                                     }
                                                     label="Password"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <OutlinedInput onChange={handleChange} name="email" />
+                                                        <OutlinedInput
+                                                            onChange={handleChange}
+                                                            name="email"
+                                                        />
                                                     }
                                                     label="Email"
                                                 />
                                                 <FormControlLabel
                                                     control={
-                                                        <Switch onChange={handleChange} name="permission_level" />
+                                                        <Switch
+                                                            onChange={handleChange}
+                                                            name="permission_level"
+                                                        />
                                                     }
                                                     label="Admin"
                                                 />
@@ -551,43 +591,18 @@ export default function Admin() {
                     </Col>
 
                     <Row>
-                        {!tableVisible && (
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                className="mb-3"
-                                onClick={toggleTable}
-                            >
-                                Show User List
-                            </Button>
-                        )}
-
-                        {tableVisible && (
-                            <Col>
-                                <h3>Users</h3>
-                                <Paper sx={{ height: 400, width: "100%" }}>
-                                    <DataGrid
-                                        rows={userList}
-                                        columns={columns}
-                                        getRowId={(userList) => userList.username}
-                                        initialState={{ pagination: { paginationModel } }}
-                                        pageSizeOptions={[5, 10]}
-                                        sx={{ border: 0 }}
-                                    />
-                                </Paper>
-                            </Col>
-                        )}
-
-                        {tableVisible && (
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                className="mb-3"
-                                onClick={toggleTable}
-                            >
-                                Hide User List
-                            </Button>
-                        )}
+                        <Col>
+                            <h3>Users</h3>
+                            <Paper sx={{ height: 600, width: "100%" }}>
+                                <DataGrid
+                                    rows={userList}
+                                    columns={columns}
+                                    getRowId={(userList) => userList.username}
+                                    initialState={{ pagination: { paginationModel } }}
+                                    sx={{ border: 0 }}
+                                />
+                            </Paper>
+                        </Col>
                     </Row>
                 </Row>
             </Container>
